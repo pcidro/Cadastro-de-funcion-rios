@@ -13,7 +13,7 @@
   </form>
 
   <!-- Table -->
-  <div class="border border-gray-200 rounded-2xl bg-white">
+  <div class="border  overflow-x-auto border-gray-200 rounded-2xl bg-white">
     <table class="w-full text-sm border-collapse">
       <thead>
         <tr class="bg-gray-50 border-b border-gray-200">
@@ -62,7 +62,7 @@
 
           <td class="px-5 py-3.5">
             <div class="flex justify-center gap-2">
-              <button class="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-500 border border-blue-200 text-xs font-medium rounded-lg transition cursor-pointer">
+              <button (click)="preparaEditar(funcionario.id)" class="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-500 border border-blue-200 text-xs font-medium rounded-lg transition cursor-pointer">
                 Editar
               </button>
               <button (click)="apagarFuncionario(funcionario)" class="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-500 border border-red-200 text-xs font-medium rounded-lg transition cursor-pointer">

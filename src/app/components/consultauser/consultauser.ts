@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users-service';
 import { Funcionario } from '../../../interfaces/funcionario-interface';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-consultauser',
@@ -11,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class Consultauser implements OnInit {
   private _usersservice = inject(UsersService);
+  private router: Router = inject(Router);
   funcionarios: Funcionario[] = [];
   nome: string = '';
 
@@ -27,5 +29,9 @@ export class Consultauser implements OnInit {
 
   pesquisar() {
     this.funcionarios = this._usersservice.pesquisarFuncionarios(this.nome);
+  }
+
+  preparaEditar(idEditar: string) {
+    this.router.navigate(['/'], { queryParams: { id: idEditar } });
   }
 }

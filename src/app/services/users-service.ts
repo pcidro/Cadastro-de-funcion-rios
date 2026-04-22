@@ -7,9 +7,15 @@ export class UsersService {
   static repoFuncionarios = '@funcionarios';
 
   salvarLocalStorage(funcionario: Funcionario) {
-    const storage = this.obterStorage();
-    storage.push(funcionario);
-    localStorage.setItem(UsersService.repoFuncionarios, JSON.stringify(storage));
+    const funcionarios = this.obterStorage();
+    const index = funcionarios.findIndex((f) => f.id === funcionario.id);
+    if (index !== -1) {
+      funcionarios[index] = funcionario;
+    } else {
+      funcionarios.push(funcionario);
+    }
+
+    localStorage.setItem(UsersService.repoFuncionarios, JSON.stringify(funcionarios));
   }
 
   obterStorage(): Funcionario[] {
@@ -39,5 +45,10 @@ export class UsersService {
     const termo = normalize(nome);
 
     return funcionarios.filter((funcionario) => normalize(funcionario.nome).includes(termo));
+  }
+
+  buscarFuncionarioPorId(idBuscado: string): Funcionario | undefined {
+    const funcionarios = this.obterStorage();
+    return funcionarios.find((cliente) => cliente.id === idBuscado);
   }
 }

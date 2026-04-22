@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -23,6 +23,7 @@ interface IFormControls {
 import { Funcionario } from '../../../interfaces/funcionario-interface';
 import { BrasilApiService } from '../../services/brasilapi-service';
 import { of, startWith, switchMap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-formuser',
@@ -30,9 +31,12 @@ import { of, startWith, switchMap } from 'rxjs';
   templateUrl: './formuser.html',
   styleUrl: './formuser.css',
 })
-export class Formuser {
+export class Formuser implements OnInit {
   private _usersService = inject(UsersService);
+  private route = inject(ActivatedRoute);
   private _brasilApi = inject(BrasilApiService);
+  updating: boolean = false;
+  idFuncionarioSelecionado: string | null = null;
   cadastroForm: FormGroup<IFormControls> = new FormGroup({
     nome: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     idade: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -73,11 +77,29 @@ export class Formuser {
     const values = this.cadastroForm.getRawValue();
 
     const funcionario: Funcionario = {
-      id: uuid(),
+      id: this.updating && this.idFuncionarioSelecionado ? this.idFuncionarioSelecionado : uuid(),
       ...values,
     };
 
     this._usersService.salvarLocalStorage(funcionario);
     this.cadastroForm.reset();
+    this.updating = false;
+    this.idFuncionarioSelecionado = null;
+  }
+
+  // QueryParamMap = Objeto com chave e valor, nesse caso ID:valor
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe((query: any) => {
+      const params = query['params'];
+      const id = params['id'];
+      if (id) {
+        const funcionario = this._usersService.buscarFuncionarioPorId(id);
+        if (funcionario) {
+          this.updating = true;
+          this.idFuncionarioSelecionado = id;
+          this.cadastroForm.patchValue(funcionario);
+        }
+      }
+    });
   }
 }
