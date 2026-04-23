@@ -15,6 +15,7 @@ export class Consultauser implements OnInit {
   private router: Router = inject(Router);
   funcionarios: Funcionario[] = [];
   nome: string = '';
+  deletingId: string | null = null;
 
   ngOnInit(): void {
     this.funcionarios = this._usersservice.obterStorage();
@@ -25,6 +26,7 @@ export class Consultauser implements OnInit {
     this.funcionarios = this.funcionarios.filter(
       (funcionario) => funcionario.id !== funcionarioApagar.id,
     );
+    this.deletingId = null;
   }
 
   pesquisar() {
@@ -33,5 +35,17 @@ export class Consultauser implements OnInit {
 
   preparaEditar(idEditar: string) {
     this.router.navigate(['/'], { queryParams: { id: idEditar } });
+  }
+
+  preparaDeletar(id: string) {
+    this.deletingId = id;
+  }
+
+  formatarData(data: string) {
+    const dia = data.substring(0, 2);
+    const mes = data.substring(2, 4);
+    const ano = data.substring(4, 8);
+
+    return `${dia}/${mes}/${ano}`;
   }
 }
