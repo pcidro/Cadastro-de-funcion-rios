@@ -21,6 +21,11 @@ export class BrasilApiService {
   }
 
   listarCidades(uf: string): Observable<Cidade[]> {
-    return this.http.get<Cidade[]>(`${this.baseUrl}/ibge/municipios/v1/${uf}`);
+    return this.http.get<Cidade[]>(`${this.baseUrl}/ibge/municipios/v1/${uf}`).pipe(
+      catchError((err) => {
+        console.log(err);
+        return of([]);
+      }),
+    );
   }
 }
